@@ -1,17 +1,31 @@
-import React, {useState, useEffect} from 'react';
-import getProducts from '../services/service';
 
-const ProductList = ({selectProduct, deleteProduct})=>{
+import { useEffect, useState } from 'react';
+import { getProducts } from '../services/service';
+
+const ProductList = ({ selectProduct, deleteProduct }) => {
     const [products, setProducts] = useState([]);
-    useEffect (()=>{
+
+    useEffect(() => {
+        refreshProducts();
+    }, []);
+
+    const refreshProducts = () => {
         getProducts().then(response => {
             setProducts(response.data);
         }).catch(error => {
-            console.log('There was an error fetching the products!', error);
-        })
-    }, [])
+            console.error('There was an error fetching the products!', error);
+        });
+    };
 
-    return(
+    const handleDelete = (productId) => {
+        deleteProduct(productId).then(() => {
+            refreshProducts();
+        }).catch(error => {
+            console.error('There was an error deleting the product!', error);
+        });
+    };
+
+    return (
         <div>
             <h1>Product List</h1>
             <ul>
@@ -19,12 +33,12 @@ const ProductList = ({selectProduct, deleteProduct})=>{
                     <li key={product.id}>
                         {product.name} - ${product.price}
                         <button onClick={() => selectProduct(product)}>Edit</button>
-                        <button onClick={() => deleteProduct(product.id)}>Delete</button>
+                        <button onClick={() => handleDelete(product.id)}>Delete</button>
                     </li>
                 ))}
             </ul>
         </div>
-    )
-}
+    );
+};
 
 export default ProductList;

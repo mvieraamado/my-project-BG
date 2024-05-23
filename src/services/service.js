@@ -1,12 +1,12 @@
-import axios from axios;
+import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:8000/api/product';
+const API_URL = 'http://127.0.0.1:8000/product/';
 
 export const getProducts = ()=> {
     return axios.get(API_URL);
 }
 
-export const getProduct = ()=> {
+export const getProduct = (id)=> {
     return axios.get(`${API_URL}${id}/`);
 }
 
